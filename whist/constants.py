@@ -547,3 +547,6 @@ ABONDANCE_POINT_SYSTEM = {
         },
     },
 }
+
+
+SAVE_FOLDER = "./results/"

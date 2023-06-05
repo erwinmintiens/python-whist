@@ -1,5 +1,5 @@
 import click
-from whist.views.games import new_game
+from whist.views.games import new_game, load_game
 
 
 @click.command()
@@ -18,10 +18,6 @@ def main(players=None):
             break
         else:
             print("Please provide a valid option.")
-
-
-def load_game():
-    pass
 
 
 def settings():

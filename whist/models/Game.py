@@ -1,5 +1,6 @@
 from typing import Union
-import sys
+import json
+import os
 
 from whist.constants import (
     KLEINE_MISERIE,
@@ -18,6 +19,7 @@ from whist.constants import (
     VRAGEN_EN_MEEGAAN_POINT_SYSTEM,
     GAME_TYPES,
     TROEL_POINT_SYSTEM,
+    SAVE_FOLDER,
 )
 
 
@@ -54,133 +56,22 @@ class Game:
             )
         )
 
-    def new_round(self):
-        for index, item in enumerate(GAME_TYPES):
-            print(f"({index})\t{item['name']}")
+    def save(self):
+        payload = {
+            "current_round": self.current_round,
+            "scoresheet": self.scoresheet,
+            "players": [player.name for player in self.players],
+        }
         while True:
-            game_number = input("Select new game: ").strip()
+            answer = input("Give a name for the file: ").strip()
             try:
-                game_number = int(game_number)
-            except Exception:
-                print("Please insert a number.")
-                continue
-            if game_number in range(len(GAME_TYPES)):
-                valid = False
-                while True:
-                    validity = input(
-                        f"Chosen game: '{GAME_TYPES[game_number]['name']}'. Is this correct? (Y/n): "
-                    ).strip()
-                    if validity in ("Y", "y", ""):
-                        valid = True
-                        break
-                    elif validity in ("N", "n"):
-                        valid = False
-                        break
-                    else:
-                        continue
-                if valid:
-                    break
-                else:
-                    continue
-            else:
-                print("Please insert a valid number.")
-                continue
-        current_game_type = GAME_TYPES[game_number]
-        while True:
-            players = input(
-                f"Who is playing {current_game_type['name']}? If more players, please separate with a space.\n(1)\t{self.players[0].name}\n(2)\t{self.players[1].name}\n(3)\t{self.players[2].name}\n(4)\t{self.players[3].name}\n"
-            ).strip()
-            try:
-                playing_players = players.split()
-                for index, player in enumerate(playing_players):
-                    playing_players[index] = self.players[int(player) - 1]
-                other_players = [x for x in self.players if x not in playing_players]
-                if ABONDANCE in current_game_type["name"]:
-                    current_game = Abondance(
-                        number_of_tricks=current_game_type["number_of_tricks"],
-                        playing_players=playing_players,
-                        other_players=other_players,
-                    )
-                elif current_game_type["name"] == KLEINE_SOLO_SLIM:
-                    current_game = Abondance(
-                        number_of_tricks=current_game_type["number_of_tricks"],
-                        playing_players=playing_players,
-                        other_players=other_players,
-                    )
-                elif current_game_type["name"] == GROTE_SOLO_SLIM:
-                    current_game = Abondance(
-                        number_of_tricks=current_game_type["number_of_tricks"],
-                        playing_players=playing_players,
-                        other_players=other_players,
-                    )
-                elif VRAGEN_EN_MEEGAAN in current_game_type["name"]:
-                    current_game = VragenEnMeegaan(
-                        number_of_tricks=current_game_type["number_of_tricks"],
-                        playing_players=playing_players,
-                        other_players=other_players,
-                    )
-                elif current_game_type["name"] == TROEL:
-                    current_game = Troel(
-                        number_of_tricks=current_game_type["number_of_tricks"],
-                        playing_players=playing_players,
-                        other_players=other_players,
-                    )
-                elif SOLO in current_game_type["name"]:
-                    current_game = Solo(
-                        number_of_tricks=current_game_type["number_of_tricks"],
-                        playing_players=playing_players,
-                        other_players=other_players,
-                    )
-                elif current_game_type["name"] == KLEINE_MISERIE:
-                    current_game = KleineMiserie(
-                        playing_players=playing_players, other_players=other_players
-                    )
-                elif current_game_type["name"] == GROTE_MISERIE:
-                    current_game = GroteMiserie(
-                        playing_players=playing_players, other_players=other_players
-                    )
-                elif current_game_type["name"] == PICCOLO:
-                    current_game = Piccolo(
-                        playing_players=playing_players, other_players=other_players
-                    )
-                elif current_game_type["name"] == GROTE_MISERIE_OP_TAFEL:
-                    current_game = GroteMiserieOpTafel(
-                        playing_players=playing_players, other_players=other_players
-                    )
+                with open(f"{SAVE_FOLDER}{answer}.json", "w") as f:
+                    json.dump(payload, f, indent=2)
                 break
-            except Exception:
-                print("Could not parse input. Please try again.")
-
-        if issubclass(type(current_game), BaseMiserieClass):
-            current_game.complete()
-            current_game.assign_points()
-        else:
-            while True:
-                answer = input("How many tricks were achieved? ").strip()
-                try:
-                    answer = int(answer)
-                    if answer not in range(1, 14):
-                        continue
-                    break
-                except Exception:
-                    continue
-            current_game.assign_points(tricks_achieved=answer)
-        print("Adding scores to scoresheet...")
-        self.add_record_to_scoresheet()
-        self.display_points()
-        while True:
-            answer = input("(N)ext round | (S)coresheet | (Q)uit: ").strip()
-            if answer in ("N", "n"):
-                break
-            elif answer in ("S", "s"):
-                self.display_points()
-            elif answer in ("Q", "q"):
-                sys.exit(0)
-            else:
+            except Exception as e:
+                print(e.__repr__())
                 continue
-
-        print("Starting new round...")
-        self.current_round += 1
+        print(f"Successfully saved to {SAVE_FOLDER}{answer}.json")
 
 
 class BaseRoundClass:
