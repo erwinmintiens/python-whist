@@ -1,12 +1,15 @@
 import click
 from whist.views.games import new_game, load_game
+from colorama import Fore, Style
 
 
 @click.command()
 @click.option("--players", help="Names of the 4 players, seperated by a semicolon (;)")
 def main(players=None):
     while True:
-        choice = input("(N)ew game | (L)oad game | (S)ettings\n").strip()
+        choice = input(
+            f"({Fore.BLUE}N{Style.RESET_ALL})ew game | ({Fore.BLUE}L{Style.RESET_ALL})oad game | ({Fore.BLUE}S{Style.RESET_ALL})ettings\n"
+        ).strip()
         if choice in ("N", "n"):
             new_game(players=players)
             break
