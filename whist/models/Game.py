@@ -47,10 +47,8 @@ class Game:
 
     def display_points(self):
         print()
-        print(
-            f"\t|{self.players[0].name}\t|{self.players[1].name}\t|{self.players[2].name}\t|{self.players[3].name}"
-        )
-        print("\t|-----\t|-----\t|-----\t|-----")
+        print("\t|" + "\t|".join([player.name for player in self.players]))
+        print("\t|" + "\t|".join(["-----"] * len(self.players)))
         for i, record in enumerate(self.scoresheet):
             print(f"{i+1}\t|{record[0]}\t|{record[1]}\t|{record[2]}\t|{record[3]}")
         print()
@@ -68,6 +66,9 @@ class Game:
     def remove_record_from_scoresheet(self) -> None:
         del self.scoresheet[-1]
 
+    def update_record(self, record_id: int, new_values: list) -> None:
+        self.scoresheet[record_id] = new_values
+
     def menu(self):
         while True:
             print()
@@ -75,6 +76,7 @@ class Game:
             print(f"({Fore.BLUE}S{Style.RESET_ALL})ave game")
             print(f"({Fore.BLUE}D{Style.RESET_ALL})isplay scoresheet")
             print(f"({Fore.BLUE}R{Style.RESET_ALL})emove last record from scoresheet")
+            print(f"({Fore.BLUE}M{Style.RESET_ALL})odify score")
             print(f"({Fore.BLUE}Q{Style.RESET_ALL})uit")
             answer = input("Choose your next action: ").strip()
             if answer in ("N", "n"):
@@ -112,6 +114,50 @@ class Game:
                             )
                         self.display_points()
                     else:
+                        continue
+            elif answer in ("M", "m"):
+                while True:
+                    self.display_points()
+                    removing = input("Please select the record to modify: ").strip()
+                    try:
+                        if int(removing) not in range(1, len(self.scoresheet) + 1):
+                            raise ValueError()
+                        break
+                    except ValueError:
+                        print(
+                            f"{Fore.RED}Please select a valid number.{Style.RESET_ALL}"
+                        )
+                        continue
+                    except Exception as e:
+                        print(
+                            f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}"
+                        )
+                        continue
+                while True:
+                    new_values = input(
+                        "Please give new points for this record, all seperated by a space: "
+                    ).strip()
+                    try:
+                        new_values = [int(x) for x in new_values.split()]
+                        if len(new_values) != 4:
+                            raise ValueError()
+                        self.update_record(
+                            record_id=int(removing) - 1, new_values=new_values
+                        )
+                        print(
+                            f"{Fore.GREEN}Successfully updated record.{Style.RESET_ALL}"
+                        )
+                        self.display_points()
+                        break
+                    except ValueError:
+                        print(
+                            f"{Fore.RED}Please insert 4 valid numbers.{Style.RESET_ALL}"
+                        )
+                        continue
+                    except Exception as e:
+                        print(
+                            f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}"
+                        )
                         continue
             else:
                 continue
