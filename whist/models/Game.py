@@ -71,13 +71,12 @@ class Game:
     def menu(self):
         while True:
             print()
-            answer = input(
-                f"({Fore.BLUE}N{Style.RESET_ALL})ext round | \
-({Fore.BLUE}S{Style.RESET_ALL})ave | \
-({Fore.BLUE}D{Style.RESET_ALL})isplay scoresheet | \
-({Fore.BLUE}R{Style.RESET_ALL})emove last record from scoresheet | \
-({Fore.BLUE}Q{Style.RESET_ALL})uit: "
-            ).strip()
+            print(f"({Fore.BLUE}N{Style.RESET_ALL})ext round")
+            print(f"({Fore.BLUE}S{Style.RESET_ALL})ave game")
+            print(f"({Fore.BLUE}D{Style.RESET_ALL})isplay scoresheet")
+            print(f"({Fore.BLUE}R{Style.RESET_ALL})emove last record from scoresheet")
+            print(f"({Fore.BLUE}Q{Style.RESET_ALL})uit")
+            answer = input("Choose your next action: ").strip()
             if answer in ("N", "n"):
                 break
             elif answer in ("S", "s"):
@@ -222,6 +221,8 @@ class Game:
                         if answer not in range(1, 14):
                             continue
                         break
+                    except ValueError:
+                        print(f"{Fore.RED}Please provide a number.{Style.RESET_ALL}")
                     except Exception:
                         continue
                 current_game.assign_points(tricks_achieved=answer)
@@ -238,8 +239,12 @@ def choose_game_type() -> dict:
         game_number = input("Select new game: ").strip()
         try:
             game_number = int(game_number)
-        except Exception:
-            print(f"{Fore.RED}Please insert a number.{Style.RESET_ALL}")
+        except ValueError:
+            print(f"{Fore.RED}Please provide a number.{Style.RESET_ALL}")
+        except Exception as e:
+            print(
+                f"{Fore.RED}An error occurred while parsing the input: {e}{Style.RESET_ALL}"
+            )
             continue
         if game_number in range(len(GAME_TYPES)):
             valid = False
@@ -276,13 +281,22 @@ def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
 ({Fore.BLUE}p{Style.RESET_ALL})\tPrevious screen\n
 Who is playing {Fore.BLUE}{current_game_type['name']}{Style.RESET_ALL}? If more players, please separate with a space: """
         ).strip()
+        if players in ("P", "p"):
+            return
         try:
-            if players in ("P", "p"):
-                return
             playing_players = players.split()
             for index, player in enumerate(playing_players):
                 playing_players[index] = game.players[int(player) - 1]
             other_players = [x for x in game.players if x not in playing_players]
+        except ValueError:
+            print(
+                f"{Fore.RED}Please provide one or more valid numbers, separated by a space if necessary.{Style.RESET_ALL}"
+            )
+            continue
+        except Exception as e:
+            print(f"{Fore.RED}An unexpected exception occurred: {e}{Style.RESET_ALL}")
+            continue
+        try:
             if ABONDANCE in current_game_type["name"]:
                 current_game = Abondance(
                     number_of_tricks=current_game_type["number_of_tricks"],
@@ -336,6 +350,8 @@ Who is playing {Fore.BLUE}{current_game_type['name']}{Style.RESET_ALL}? If more 
                     playing_players=playing_players, other_players=other_players
                 )
             break
+        except ValueError as e:
+            print(f"{Fore.RED}{e}{Style.RESET_ALL}")
         except Exception as e:
             print(f"{Fore.RED}An exception occurred: {e}{Style.RESET_ALL}")
     return current_game
