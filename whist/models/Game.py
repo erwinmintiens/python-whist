@@ -67,7 +67,9 @@ class Game:
         del self.scoresheet[-1]
 
     def update_record(self, record_id: int, new_values: list) -> None:
-        self.scoresheet[record_id] = new_values
+        for index, item in enumerate(new_values):
+            if type(item) == int:
+                self.scoresheet[record_id][index] = new_values[index]
 
     def menu(self):
         while True:
@@ -135,10 +137,20 @@ class Game:
                         continue
                 while True:
                     new_values = input(
-                        "Please give new points for this record, all seperated by a space: "
+                        "Please give new points for this record, all seperated by a space. If you do not want to change a specific value, put x instead of the new value: "
                     ).strip()
                     try:
-                        new_values = [int(x) for x in new_values.split()]
+                        new_values = new_values.split()
+                        for index, item in enumerate(new_values):
+                            try:
+                                new_values[index] = int(item)
+                            except ValueError:
+                                new_values[index] = "x"
+                            except Exception as e:
+                                print(
+                                    f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}"
+                                )
+                                continue
                         if len(new_values) != 4:
                             raise ValueError()
                         self.update_record(
