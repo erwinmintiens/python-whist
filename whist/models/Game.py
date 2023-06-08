@@ -65,11 +65,18 @@ class Game:
             )
         )
 
+    def remove_record_from_scoresheet(self) -> None:
+        del self.scoresheet[-1]
+
     def menu(self):
         while True:
             print()
             answer = input(
-                f"({Fore.BLUE}N{Style.RESET_ALL})ext round | ({Fore.BLUE}S{Style.RESET_ALL})ave | ({Fore.BLUE}D{Style.RESET_ALL})isplay scoresheet | ({Fore.BLUE}Q{Style.RESET_ALL})uit: "
+                f"({Fore.BLUE}N{Style.RESET_ALL})ext round | \
+({Fore.BLUE}S{Style.RESET_ALL})ave | \
+({Fore.BLUE}D{Style.RESET_ALL})isplay scoresheet | \
+({Fore.BLUE}R{Style.RESET_ALL})emove last record from scoresheet | \
+({Fore.BLUE}Q{Style.RESET_ALL})uit: "
             ).strip()
             if answer in ("N", "n"):
                 break
@@ -86,6 +93,27 @@ class Game:
                         continue
             elif answer in ("D", "d"):
                 self.display_points()
+            elif answer in ("R", "r"):
+                while True:
+                    removing = input(
+                        "Are you sure you wish to delete the last record from the scoresheet? (y/N): "
+                    ).strip()
+                    if removing in ("N", "n", ""):
+                        break
+                    elif removing in ("Y", "y"):
+                        try:
+                            self.remove_record_from_scoresheet()
+                        except IndexError:
+                            print(
+                                f"{Fore.RED}Unable to remove last record from scoresheet: the scorelist seems to be empty.{Style.RESET_ALL}"
+                            )
+                        except Exception as e:
+                            print(
+                                f"{Fore.RED}An error occurred while trying to remove last record from scoresheet: {e}{Style.RESET_ALL}"
+                            )
+                        self.display_points()
+                    else:
+                        continue
             else:
                 continue
 
