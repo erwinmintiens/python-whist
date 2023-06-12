@@ -1,10 +1,17 @@
 from whist.constants import (
-    SOLO_POINT_SYSTEM,
-    MISERIE_POINT_SYSTEM,
-    ABONDANCE_POINT_SYSTEM,
-    VRAGEN_EN_MEEGAAN_POINT_SYSTEM,
-    TROEL_POINT_SYSTEM,
+    # SOLO_POINT_SYSTEM,
+    # MISERIE_POINT_SYSTEM,
+    # ABONDANCE_POINT_SYSTEM,
+    # VRAGEN_EN_MEEGAAN_POINT_SYSTEM,
+    # TROEL_POINT_SYSTEM,
+    CONFIG_FOLDER,
+    SOLO_POINT_SYSTEM_FILE_NAME,
+    ABONDANCE_POINT_SYSTEM_FILE_NAME,
+    TROEL_POINT_SYSTEM_FILE_NAME,
+    VRAGEN_EN_MEEGAAN_POINT_SYSTEM_FILE_NAME,
+    MISERIE_POINT_SYSTEM_FILE_NAME,
 )
+from whist.utils import read_json
 from colorama import Fore, Style
 
 
@@ -87,7 +94,10 @@ class Abondance(BaseRoundClass):
 
     def assign_points(self, tricks_achieved: int):
         super().assign_points(
-            tricks_achieved=tricks_achieved, point_system=ABONDANCE_POINT_SYSTEM
+            tricks_achieved=tricks_achieved,
+            point_system=read_json(
+                f"{CONFIG_FOLDER}{ABONDANCE_POINT_SYSTEM_FILE_NAME}"
+            ),
         )
 
 
@@ -109,7 +119,10 @@ class VragenEnMeegaan(BaseRoundClass):
 
     def assign_points(self, tricks_achieved: int) -> None:
         super().assign_points(
-            tricks_achieved=tricks_achieved, point_system=VRAGEN_EN_MEEGAAN_POINT_SYSTEM
+            tricks_achieved=tricks_achieved,
+            point_system=read_json(
+                f"{CONFIG_FOLDER}{VRAGEN_EN_MEEGAAN_POINT_SYSTEM_FILE_NAME}"
+            ),
         )
 
 
@@ -119,20 +132,40 @@ class Troel(VragenEnMeegaan):
         number_of_tricks: int,
         playing_players: list = [],
         other_players: list = [],
+        trump_changed=False,
     ) -> None:
         super().__init__(
             number_of_tricks=number_of_tricks,
             playing_players=playing_players,
             other_players=other_players,
         )
+        self.trump_changed = trump_changed
 
     def assign_points(
-        self, tricks_achieved: int, point_system: dict = TROEL_POINT_SYSTEM
+        self,
+        tricks_achieved: int,
+        point_system: dict = read_json(
+            f"{CONFIG_FOLDER}{MISERIE_POINT_SYSTEM_FILE_NAME}"
+        ),
     ) -> None:
-        for player in self.playing_players:
-            player.add_to_score(point_system["player"][str(tricks_achieved)])
-        for player in self.other_players:
-            player.add_to_score(point_system["other_players"][str(tricks_achieved)])
+        if self.trump_changed:
+            for player in self.playing_players:
+                player.add_to_score(
+                    point_system["player"]["trump_changed"][str(tricks_achieved)]
+                )
+            for player in self.other_players:
+                player.add_to_score(
+                    point_system["other_players"]["trump_changed"][str(tricks_achieved)]
+                )
+        elif not self.trump_changed:
+            for player in self.playing_players:
+                player.add_to_score(
+                    point_system["player"]["trump_kept"][str(tricks_achieved)]
+                )
+            for player in self.other_players:
+                player.add_to_score(
+                    point_system["other_players"]["trump_kept"][str(tricks_achieved)]
+                )
 
 
 class Solo(BaseRoundClass):
@@ -155,7 +188,8 @@ class Solo(BaseRoundClass):
 
     def assign_points(self, tricks_achieved: int) -> None:
         super().assign_points(
-            tricks_achieved=tricks_achieved, point_system=SOLO_POINT_SYSTEM
+            tricks_achieved=tricks_achieved,
+            point_system=read_json(f"{CONFIG_FOLDER}{SOLO_POINT_SYSTEM_FILE_NAME}"),
         )
 
 
@@ -170,32 +204,27 @@ class BaseMiserieClass(BaseRoundClass):
         number_of_failed_players = [
             player.has_succeeded for player in self.playing_players
         ].count(False)
+        base_point_system = read_json(f"{CONFIG_FOLDER}{TROEL_POINT_SYSTEM_FILE_NAME}")
         for player in self.playing_players:
             player.add_to_score(
-                MISERIE_POINT_SYSTEM[point_system]["punten_geslaagd"]
+                base_point_system[point_system]["punten_geslaagd"]
             ) if player.has_succeeded else player.add_to_score(
-                MISERIE_POINT_SYSTEM[point_system]["punten_niet_geslaagd"]
+                base_point_system[point_system]["punten_niet_geslaagd"]
             )
         if number_of_failed_players == 1:
             for player in self.other_players:
                 player.add_to_score(
-                    MISERIE_POINT_SYSTEM[point_system]["punten_anderen_niet_geslaagd"][
-                        "1"
-                    ]
+                    base_point_system[point_system]["punten_anderen_niet_geslaagd"]["1"]
                 )
         elif number_of_failed_players == 2:
             for player in self.other_players:
                 player.add_to_score(
-                    MISERIE_POINT_SYSTEM[point_system]["punten_anderen_niet_geslaagd"][
-                        "2"
-                    ]
+                    base_point_system[point_system]["punten_anderen_niet_geslaagd"]["2"]
                 )
         elif number_of_failed_players == 3:
             for player in self.other_players:
                 player.add_to_score(
-                    MISERIE_POINT_SYSTEM[point_system]["punten_anderen_niet_geslaagd"][
-                        "3"
-                    ]
+                    base_point_system[point_system]["punten_anderen_niet_geslaagd"]["3"]
                 )
 
 

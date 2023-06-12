@@ -27,9 +27,11 @@ from whist.constants import (
     TROEL,
     SOLO,
     ABONDANCE,
-    GAME_TYPES,
     SAVE_FOLDER,
+    CONFIG_FOLDER,
+    GAME_TYPES_FILE_NAME,
 )
+from whist.utils import read_json
 
 
 class Game:
@@ -86,92 +88,98 @@ class Game:
             elif answer in ("S", "s"):
                 self.save()
             elif answer in ("Q", "q"):
-                while True:
-                    quitting = input("Are you sure you wish to exit? (y/N): ").strip()
-                    if quitting in ("N", "n", ""):
-                        break
-                    elif quitting in ("Y", "y"):
-                        sys.exit(0)
-                    else:
-                        continue
+                self.exit()
             elif answer in ("D", "d"):
                 self.display_points()
             elif answer in ("R", "r"):
-                while True:
-                    removing = input(
-                        "Are you sure you wish to delete the last record from the scoresheet? (y/N): "
-                    ).strip()
-                    if removing in ("N", "n", ""):
-                        break
-                    elif removing in ("Y", "y"):
-                        try:
-                            self.remove_record_from_scoresheet()
-                        except IndexError:
-                            print(
-                                f"{Fore.RED}Unable to remove last record from scoresheet: the scorelist seems to be empty.{Style.RESET_ALL}"
-                            )
-                        except Exception as e:
-                            print(
-                                f"{Fore.RED}An error occurred while trying to remove last record from scoresheet: {e}{Style.RESET_ALL}"
-                            )
-                        self.display_points()
-                    else:
-                        continue
+                self.remove_record()
             elif answer in ("M", "m"):
-                while True:
-                    self.display_points()
-                    removing = input("Please select the record to modify: ").strip()
-                    try:
-                        if int(removing) not in range(1, len(self.scoresheet) + 1):
-                            raise ValueError()
-                        break
-                    except ValueError:
-                        print(
-                            f"{Fore.RED}Please select a valid number.{Style.RESET_ALL}"
-                        )
-                        continue
-                    except Exception as e:
-                        print(
-                            f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}"
-                        )
-                        continue
-                while True:
-                    new_values = input(
-                        "Please give new points for this record, all seperated by a space. If you do not want to change a specific value, put x instead of the new value: "
-                    ).strip()
-                    try:
-                        new_values = new_values.split()
-                        for index, item in enumerate(new_values):
-                            try:
-                                new_values[index] = int(item)
-                            except ValueError:
-                                new_values[index] = "x"
-                            except Exception as e:
-                                print(
-                                    f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}"
-                                )
-                                continue
-                        if len(new_values) != 4:
-                            raise ValueError()
-                        self.update_record(
-                            record_id=int(removing) - 1, new_values=new_values
-                        )
-                        print(
-                            f"{Fore.GREEN}Successfully updated record.{Style.RESET_ALL}"
-                        )
-                        self.display_points()
-                        break
-                    except ValueError:
-                        print(
-                            f"{Fore.RED}Please insert 4 valid numbers.{Style.RESET_ALL}"
-                        )
-                        continue
-                    except Exception as e:
-                        print(
-                            f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}"
-                        )
-                        continue
+                if len(self.scoresheet) == 0:
+                    print(
+                        f"{Fore.RED}No score record(s) available to modify.{Style.RESET_ALL}"
+                    )
+                    continue
+                self.modify_scoresheet()
             else:
+                continue
+
+    def exit(self):
+        while True:
+            quitting = input("Are you sure you wish to exit? (y/N): ").strip()
+            if quitting in ("N", "n", ""):
+                break
+            elif quitting in ("Y", "y"):
+                sys.exit(0)
+            else:
+                continue
+
+    def remove_record(self):
+        while True:
+            removing = input(
+                "Are you sure you wish to delete the last record from the scoresheet? (y/N): "
+            ).strip()
+            if removing in ("N", "n", ""):
+                break
+            elif removing in ("Y", "y"):
+                try:
+                    self.remove_record_from_scoresheet()
+                except IndexError:
+                    print(
+                        f"{Fore.RED}Unable to remove last record from scoresheet: the scorelist seems to be empty.{Style.RESET_ALL}"
+                    )
+                except Exception as e:
+                    print(
+                        f"{Fore.RED}An error occurred while trying to remove last record from scoresheet: {e}{Style.RESET_ALL}"
+                    )
+                self.display_points()
+            else:
+                continue
+
+    def modify_scoresheet(self):
+        while True:
+            self.display_points()
+            removing = input(
+                "Please select the record to modify (q to quit modifying): "
+            ).strip()
+            try:
+                if removing in ("Q", "q"):
+                    return
+                if int(removing) not in range(1, len(self.scoresheet) + 1):
+                    raise ValueError()
+                break
+            except ValueError:
+                print(f"{Fore.RED}Please select a valid number.{Style.RESET_ALL}")
+                continue
+            except Exception as e:
+                print(f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}")
+                continue
+        while True:
+            new_values = input(
+                "Please give new points for this record, all seperated by a space. If you do not want to change a specific value, put x instead of the new value: "
+            ).strip()
+            try:
+                new_values = new_values.split()
+                for index, item in enumerate(new_values):
+                    try:
+                        new_values[index] = int(item)
+                    except ValueError:
+                        new_values[index] = "x"
+                    except Exception as e:
+                        print(
+                            f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}"
+                        )
+                        continue
+                if len(new_values) != 4:
+                    raise ValueError()
+                self.update_record(record_id=int(removing) - 1, new_values=new_values)
+                print(f"{Fore.GREEN}Successfully updated record.{Style.RESET_ALL}")
+                self.display_points()
+                break
+            except ValueError:
+                print(f"{Fore.RED}Please insert 4 valid numbers.{Style.RESET_ALL}")
+                continue
+            except Exception as e:
+                print(f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}")
                 continue
 
     def save(self):
@@ -276,7 +284,7 @@ class Game:
                     answer = input("How many tricks were achieved? ").strip()
                     try:
                         answer = int(answer)
-                        if answer not in range(1, 14):
+                        if answer not in range(0, 14):
                             continue
                         break
                     except ValueError:
@@ -290,7 +298,8 @@ class Game:
 
 def choose_game_type() -> dict:
     print("-" * 30)
-    for index, item in enumerate(GAME_TYPES):
+    game_types = read_json(f"{CONFIG_FOLDER}{GAME_TYPES_FILE_NAME}")
+    for index, item in enumerate(game_types):
         print(f"({Fore.BLUE}{index}{Style.RESET_ALL})\t{item['name']}")
     print("-" * 30)
     while True:
@@ -304,11 +313,11 @@ def choose_game_type() -> dict:
                 f"{Fore.RED}An error occurred while parsing the input: {e}{Style.RESET_ALL}"
             )
             continue
-        if game_number in range(len(GAME_TYPES)):
+        if game_number in range(len(game_types)):
             valid = False
             while True:
                 validity = input(
-                    f"Chosen game: {Fore.BLUE}{GAME_TYPES[game_number]['name']}{Style.RESET_ALL}. Is this correct? (Y/n): "
+                    f"Chosen game: {Fore.BLUE}{game_types[game_number]['name']}{Style.RESET_ALL}. Is this correct? (Y/n): "
                 ).strip()
                 if validity in ("Y", "y", ""):
                     valid = True
@@ -325,7 +334,7 @@ def choose_game_type() -> dict:
         else:
             print(f"{Fore.RED}Please insert a valid number.{Style.RESET_ALL}")
             continue
-    return GAME_TYPES[game_number]
+    return game_types[game_number]
 
 
 def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
@@ -336,10 +345,10 @@ def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
 ({Fore.BLUE}2{Style.RESET_ALL})\t{game.players[1].name}
 ({Fore.BLUE}3{Style.RESET_ALL})\t{game.players[2].name}
 ({Fore.BLUE}4{Style.RESET_ALL})\t{game.players[3].name}\n
-({Fore.BLUE}p{Style.RESET_ALL})\tPrevious screen\n
+({Fore.BLUE}q{Style.RESET_ALL})\tQuit new round\n
 Who is playing {Fore.BLUE}{current_game_type['name']}{Style.RESET_ALL}? If more players, please separate with a space: """
         ).strip()
-        if players in ("P", "p"):
+        if players in ("Q", "q"):
             return
         try:
             playing_players = players.split()
@@ -380,11 +389,30 @@ Who is playing {Fore.BLUE}{current_game_type['name']}{Style.RESET_ALL}? If more 
                     other_players=other_players,
                 )
             elif current_game_type["name"] == TROEL:
-                current_game = Troel(
-                    number_of_tricks=current_game_type["number_of_tricks"],
-                    playing_players=playing_players,
-                    other_players=other_players,
-                )
+                while True:
+                    answer = input("Did you keep the current trump? (Y/n): ").strip()
+                    if answer in ("Y", "y", ""):
+                        number_of_tricks = current_game_type["number_of_tricks"][
+                            "trump_kept"
+                        ]
+                        current_game = Troel(
+                            number_of_tricks=number_of_tricks,
+                            playing_players=playing_players,
+                            other_players=other_players,
+                            trump_changed=False,
+                        )
+                        break
+                    elif answer in ("N", "n"):
+                        number_of_tricks = current_game_type["number_of_tricks"][
+                            "trump_changed"
+                        ]
+                        current_game = Troel(
+                            number_of_tricks=number_of_tricks,
+                            playing_players=playing_players,
+                            other_players=other_players,
+                            trump_changed=True,
+                        )
+                        break
             elif SOLO in current_game_type["name"]:
                 current_game = Solo(
                     number_of_tricks=current_game_type["number_of_tricks"],

@@ -4,7 +4,7 @@ from colorama import Fore, Style
 
 
 @click.command()
-@click.option("--players", help="Names of the 4 players, seperated by a semicolon (;)")
+@click.option("--players", help="Names of the 4 players, seperated by a space")
 def main(players=None):
     while True:
         choice = input(
