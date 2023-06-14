@@ -1,5 +1,5 @@
 import click
-from whist.views.games import new_game, load_game
+from whist_score.views.games import new_game, load_game
 from colorama import Fore, Style
 
 
@@ -8,16 +8,13 @@ from colorama import Fore, Style
 def main(players=None):
     while True:
         choice = input(
-            f"({Fore.BLUE}N{Style.RESET_ALL})ew game | ({Fore.BLUE}L{Style.RESET_ALL})oad game | ({Fore.BLUE}S{Style.RESET_ALL})ettings\n"
+            f"({Fore.BLUE}N{Style.RESET_ALL})ew game\n({Fore.BLUE}L{Style.RESET_ALL})oad game\n"
         ).strip()
         if choice in ("N", "n"):
             new_game(players=players)
             break
         elif choice in ("L", "l"):
             load_game()
-            break
-        elif choice in ("S", "s"):
-            settings()
             break
         else:
             print("Please provide a valid option.")

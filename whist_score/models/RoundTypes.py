@@ -1,4 +1,4 @@
-from whist.constants import (
+from whist_score.constants import (
     # SOLO_POINT_SYSTEM,
     # MISERIE_POINT_SYSTEM,
     # ABONDANCE_POINT_SYSTEM,
@@ -11,7 +11,7 @@ from whist.constants import (
     VRAGEN_EN_MEEGAAN_POINT_SYSTEM_FILE_NAME,
     MISERIE_POINT_SYSTEM_FILE_NAME,
 )
-from whist.utils import read_json
+from whist_score.utils import read_json
 from colorama import Fore, Style
 
 
@@ -48,16 +48,21 @@ class BaseRoundClass:
                 print(f"({Fore.BLUE}{index}{Style.RESET_ALL})\t{player.name}")
             answer = input(
                 "Please choose the players that succeeded. Separate with a space if needed (q to quit to previous question): "
-            )
+            ).strip()
             try:
                 answer = answer.split()
                 if answer == ["q"] or answer == ["Q"]:
                     break
-                for item in answer:
-                    if int(item) not in range(len(self.playing_players)):
-                        continue
-                break
+                if all(
+                    [int(item) in range(len(self.playing_players)) for item in answer]
+                ):
+                    break
+                else:
+                    print(f"{Fore.RED}Please insert a valid number.{Style.RESET_ALL}")
             except Exception:
+                print(
+                    f"{Fore.RED}An error occurred while trying to parse the answer. Please try again.{Style.RESET_ALL}"
+                )
                 continue
         if answer != ["q"] and answer != ["Q"]:
             for item in answer:
@@ -145,7 +150,7 @@ class Troel(VragenEnMeegaan):
         self,
         tricks_achieved: int,
         point_system: dict = read_json(
-            f"{CONFIG_FOLDER}{MISERIE_POINT_SYSTEM_FILE_NAME}"
+            f"{CONFIG_FOLDER}{TROEL_POINT_SYSTEM_FILE_NAME}"
         ),
     ) -> None:
         if self.trump_changed:
@@ -204,7 +209,9 @@ class BaseMiserieClass(BaseRoundClass):
         number_of_failed_players = [
             player.has_succeeded for player in self.playing_players
         ].count(False)
-        base_point_system = read_json(f"{CONFIG_FOLDER}{TROEL_POINT_SYSTEM_FILE_NAME}")
+        base_point_system = read_json(
+            f"{CONFIG_FOLDER}{MISERIE_POINT_SYSTEM_FILE_NAME}"
+        )
         for player in self.playing_players:
             player.add_to_score(
                 base_point_system[point_system]["punten_geslaagd"]

@@ -1,7 +1,2 @@
 include LICENSE
-include config/troel_point_system.json
-include config/abondance_point_system.json
-include config/game_types.json
-include config/miserie_point_system.json
-include config/solo_point_system.json
-include config/vragen_en_meegaan_point_system.json
+include *.json

@@ -1,3 +1,5 @@
+import os
+
 MISERIE = "Miserie"
 KLEINE_MISERIE = f"Kleine {MISERIE}"
 GROTE_MISERIE = f"Grote {MISERIE}"
@@ -10,8 +12,9 @@ SOLO = "Solo"
 TROEL = "Troel"
 PICCOLO = "Piccolo"
 ABONDANCE = "Abondance"
-SAVE_FOLDER = "./results/"
-CONFIG_FOLDER = "~/.whist-score/"
+ROOT_FOLDER = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FOLDER = os.path.join(ROOT_FOLDER, "config/")
+SAVE_FOLDER = os.path.expanduser("~/.whist_score/saves/")
 SOLO_POINT_SYSTEM_FILE_NAME = "solo_point_system.json"
 ABONDANCE_POINT_SYSTEM_FILE_NAME = "abondance_point_system.json"
 MISERIE_POINT_SYSTEM_FILE_NAME = "miserie_point_system.json"

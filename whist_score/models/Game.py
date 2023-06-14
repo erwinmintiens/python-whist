@@ -3,8 +3,8 @@ import json
 import sys
 import os
 from colorama import Fore, Style
-from whist.models.Player import Player
-from whist.models.RoundTypes import (
+from whist_score.models.Player import Player
+from whist_score.models.RoundTypes import (
     BaseMiserieClass,
     Abondance,
     VragenEnMeegaan,
@@ -16,7 +16,7 @@ from whist.models.RoundTypes import (
     Piccolo,
 )
 
-from whist.constants import (
+from whist_score.constants import (
     KLEINE_MISERIE,
     KLEINE_SOLO_SLIM,
     GROTE_MISERIE,
@@ -31,7 +31,7 @@ from whist.constants import (
     CONFIG_FOLDER,
     GAME_TYPES_FILE_NAME,
 )
-from whist.utils import read_json
+from whist_score.utils import read_json
 
 
 class Game:
@@ -132,6 +132,7 @@ class Game:
                         f"{Fore.RED}An error occurred while trying to remove last record from scoresheet: {e}{Style.RESET_ALL}"
                     )
                 self.display_points()
+                break
             else:
                 continue
 
@@ -159,6 +160,8 @@ class Game:
             ).strip()
             try:
                 new_values = new_values.split()
+                if len(new_values) != 4:
+                    raise ValueError()
                 for index, item in enumerate(new_values):
                     try:
                         new_values[index] = int(item)
@@ -169,8 +172,6 @@ class Game:
                             f"{Fore.RED}An unexpected error occurred: {e}{Style.RESET_ALL}"
                         )
                         continue
-                if len(new_values) != 4:
-                    raise ValueError()
                 self.update_record(record_id=int(removing) - 1, new_values=new_values)
                 print(f"{Fore.GREEN}Successfully updated record.{Style.RESET_ALL}")
                 self.display_points()
@@ -236,10 +237,15 @@ class Game:
                 for pos_json in os.listdir(SAVE_FOLDER)
                 if pos_json.endswith(".json")
             ]
+            if len(json_files) == 0:
+                print(f"{Fore.RED}No valid save files detected.{Style.RESET_ALL}")
+                return
             print()
             for index, name in enumerate(json_files):
                 print(f"({Fore.BLUE}{index}{Style.RESET_ALL})\t{name}")
-            answer = input("Please select a game to load: ").strip()
+            answer = input("Please select a game to load (q to return): ").strip()
+            if answer in ("Q", "q"):
+                return
             try:
                 try:
                     answer = int(answer)
@@ -257,7 +263,12 @@ class Game:
                 continue
         players = []
         for index, item in enumerate(payload["players"]):
-            players.append(Player(name=item, score=payload["scoresheet"][-1][index]))
+            player_score = (
+                0
+                if len(payload["scoresheet"]) == 0
+                else payload["scoresheet"][-1][index]
+            )
+            players.append(Player(name=item, score=player_score))
         self.current_round = payload["current_round"]
         self.scoresheet = payload["scoresheet"]
         self.players = players

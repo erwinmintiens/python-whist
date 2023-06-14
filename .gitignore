@@ -177,3 +177,4 @@ pyrightconfig.json
 
 .python-version
 results/*
+whist_score/saves/*

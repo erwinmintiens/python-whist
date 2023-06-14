@@ -1,5 +1,5 @@
-from whist.models.Player import Player
-from whist.models.Game import Game
+from whist_score.models.Player import Player
+from whist_score.models.Game import Game
 from colorama import Fore, Style
 
 
