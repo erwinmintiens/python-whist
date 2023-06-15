@@ -20,7 +20,7 @@ class InstallCommand(install):
 
 setup(
     name="whist-score",
-    version="0.0.1",
+    version="0.1.0",
     author="Erwin Mintiens",
     author_email="erwin.mintiens@protonmail.com",
     license_files=("LICENSE",),
@@ -31,10 +31,10 @@ setup(
     py_modules=["whist_score", "main"],
     packages=find_packages(),
     package_data={"whist_score": ["config/*.json"]},
-    install_requires=["click>=7.1.2", "colorama>=0.4.6"],
-    python_requires=">=3.8",
+    install_requires=["click>=7.1.2", "colorama>=0.4.6", "tabulate>=0.9.0"],
+    python_requires=">=3.10",
     classifiers=[
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.10",
         "Operating System :: OS Independent",
     ],
     entry_points="""

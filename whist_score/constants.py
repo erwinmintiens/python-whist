@@ -21,3 +21,22 @@ MISERIE_POINT_SYSTEM_FILE_NAME = "miserie_point_system.json"
 TROEL_POINT_SYSTEM_FILE_NAME = "troel_point_system.json"
 VRAGEN_EN_MEEGAAN_POINT_SYSTEM_FILE_NAME = "vragen_en_meegaan_point_system.json"
 GAME_TYPES_FILE_NAME = "game_types.json"
+TOTAL_HEADER_LENGTH = 30
+POINT_SYSTEM_SETTINGS = [
+    {
+        "name": "Point System",
+        "options": [
+            SOLO,
+            VRAGEN_EN_MEEGAAN,
+            TROEL,
+            ABONDANCE,
+            KLEINE_MISERIE,
+            PICCOLO,
+            GROTE_MISERIE,
+            GROTE_MISERIE_OP_TAFEL,
+            KLEINE_SOLO_SLIM,
+            GROTE_SOLO_SLIM,
+        ],
+    }
+]
+ROOT_SETTINGS = [POINT_SYSTEM_SETTINGS]

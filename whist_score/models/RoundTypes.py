@@ -12,7 +12,9 @@ from whist_score.constants import (
     MISERIE_POINT_SYSTEM_FILE_NAME,
 )
 from whist_score.utils import read_json
-from colorama import Fore, Style
+from whist_score.models.Message import Message
+
+message = Message()
 
 
 class BaseRoundClass:
@@ -24,47 +26,55 @@ class BaseRoundClass:
         for player in self.playing_players:
             player.has_succeeded = False
         while True:
-            succeeded = input("Did all the player(s) succeed? (Y/n): ").strip()
-            if succeeded in ("Y", "y", ""):
-                for player in self.playing_players:
-                    player.has_succeeded = True
-                break
-            elif succeeded in ("N", "n"):
-                pass
-            else:
-                continue
-            answer = input("Did some players succeed? (Y/n): ")
-            if answer in ("Y", "y", ""):
-                self.choose_succeeded_players()
-                break
-            elif answer in ("N", "n"):
-                break
-            else:
-                continue
+            message.message("Did all the player(s) succeed? (Y/n):")
+            succeeded = message.input()
+            match succeeded:
+                case "y" | "":
+                    for player in self.playing_players:
+                        player.has_succeeded = True
+                    break
+                case "n":
+                    pass
+                case _:
+                    continue
+            message.message("Did some players succeed? (Y/n):")
+            answer = message.input()
+            match answer:
+                case "y" | "":
+                    self.choose_succeeded_players()
+                    break
+                case "n":
+                    break
+                case _:
+                    continue
 
     def choose_succeeded_players(self):
         while True:
             for index, player in enumerate(self.playing_players):
-                print(f"({Fore.BLUE}{index}{Style.RESET_ALL})\t{player.name}")
-            answer = input(
-                "Please choose the players that succeeded. Separate with a space if needed (q to quit to previous question): "
-            ).strip()
+                message.options(
+                    option=str(index),
+                    message=f"\t{player.name}",
+                    remove_first_letter_of_message=False,
+                )
+            message.message(
+                "Please choose the players that succeeded. Separate with a space if needed (q to quit to previous question):"
+            )
+            answer = message.input().split()
             try:
-                answer = answer.split()
-                if answer == ["q"] or answer == ["Q"]:
+                if answer == ["q"]:
                     break
                 if all(
                     [int(item) in range(len(self.playing_players)) for item in answer]
                 ):
                     break
                 else:
-                    print(f"{Fore.RED}Please insert a valid number.{Style.RESET_ALL}")
-            except Exception:
-                print(
-                    f"{Fore.RED}An error occurred while trying to parse the answer. Please try again.{Style.RESET_ALL}"
+                    message.error("Please insert a valid number.")
+            except Exception as e:
+                message.error(
+                    f"An error occurred while trying to parse the answer: {e}\nPlease try again."
                 )
                 continue
-        if answer != ["q"] and answer != ["Q"]:
+        if answer != ["q"]:
             for item in answer:
                 self.playing_players[int(item)].has_succeeded = True
 
