@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.1
+
+- Added quit option in main menu
+
 ## v0.1.0
 
 From this release onwards, **Python version >= 3.10 is required**.
