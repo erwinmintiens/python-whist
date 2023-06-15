@@ -1,7 +1,10 @@
-import click
-from whist_score.views.games import new_game, load_game, settings
-from whist_score.models.Message import Message
 import importlib.metadata
+import sys
+
+import click
+
+from whist_score.models.Message import Message
+from whist_score.views.games import load_game, new_game, settings
 
 message = Message()
 
@@ -25,7 +28,8 @@ def main(players=None):
         message.options(option="N", message="New game")
         message.options(option="L", message="Load game")
         # message.options(option="S", message="Settings")
-        # choice = input("> ").strip().lower()
+        print()
+        message.options(option="Q", message="Quit")
         choice = message.input()
         match choice:
             case "n":
@@ -37,6 +41,8 @@ def main(players=None):
             # case "s":
             #     settings()
             #     break
+            case "q":
+                sys.exit(0)
             case _:
                 message.error("Please provide a valid option.")
 

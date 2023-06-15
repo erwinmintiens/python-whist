@@ -1,35 +1,22 @@
-from typing import Union
 import json
-import sys
 import os
-from colorama import Fore, Style
-from whist_score.models.Player import Player
-from whist_score.models.Message import Message
-from whist_score.models.RoundTypes import (
-    BaseMiserieClass,
-    Abondance,
-    VragenEnMeegaan,
-    Solo,
-    GroteMiserie,
-    KleineMiserie,
-    GroteMiserieOpTafel,
-    Troel,
-    Piccolo,
-)
+import sys
+from typing import Union
 
-from whist_score.constants import (
-    SAVE_FOLDER,
-    CONFIG_FOLDER,
-    GAME_TYPES_FILE_NAME,
-    VRAGEN_EN_MEEGAAN,
-    SOLO,
-    ABONDANCE,
-    GROTE_SOLO_SLIM,
-    KLEINE_SOLO_SLIM,
-)
-from whist_score.utils import read_json
+from colorama import Fore, Style
 from tabulate import tabulate
 
+from whist_score.constants import (ABONDANCE, CONFIG_FOLDER,
+                                   GAME_TYPES_FILE_NAME, GROTE_SOLO_SLIM,
+                                   KLEINE_SOLO_SLIM, SAVE_FOLDER, SOLO,
+                                   VRAGEN_EN_MEEGAAN)
+from whist_score.models.Message import Message
+from whist_score.models.Player import Player
+from whist_score.models.RoundTypes import (Abondance, BaseMiserieClass,
+                                           GroteMiserie, GroteMiserieOpTafel,
+                                           KleineMiserie, Piccolo, Solo, Troel,
+                                           VragenEnMeegaan)
+from whist_score.utils import read_json
 
 message = Message()
 

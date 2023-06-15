@@ -1,8 +1,7 @@
-from whist_score.models.Player import Player
+from whist_score.constants import POINT_SYSTEM_SETTINGS, ROOT_SETTINGS
 from whist_score.models.Game import Game
 from whist_score.models.Message import Message
-
-from whist_score.constants import ROOT_SETTINGS, POINT_SYSTEM_SETTINGS
+from whist_score.models.Player import Player
 
 message = Message()
 

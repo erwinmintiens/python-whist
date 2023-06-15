@@ -1,4 +1,5 @@
 from colorama import Fore, Style
+
 from whist_score.constants import TOTAL_HEADER_LENGTH
 
 
