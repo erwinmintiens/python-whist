@@ -15,3 +15,4 @@ The program can be started by executing `whist-score` in a terminal after instal
 - [x] Removing the last game record
 - [ ] Modifying the scoring rules
 - [ ] Moving to a full CLI tool with separate commands
+- [ ] Translations
