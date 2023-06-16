@@ -1,7 +1,11 @@
 from whist_score.constants import (  # SOLO_POINT_SYSTEM,; MISERIE_POINT_SYSTEM,; ABONDANCE_POINT_SYSTEM,; VRAGEN_EN_MEEGAAN_POINT_SYSTEM,; TROEL_POINT_SYSTEM,
-    ABONDANCE_POINT_SYSTEM_FILE_NAME, CONFIG_FOLDER,
-    MISERIE_POINT_SYSTEM_FILE_NAME, SOLO_POINT_SYSTEM_FILE_NAME,
-    TROEL_POINT_SYSTEM_FILE_NAME, VRAGEN_EN_MEEGAAN_POINT_SYSTEM_FILE_NAME)
+    ABONDANCE_POINT_SYSTEM_FILE_NAME,
+    CONFIG_FOLDER,
+    MISERIE_POINT_SYSTEM_FILE_NAME,
+    SOLO_POINT_SYSTEM_FILE_NAME,
+    TROEL_POINT_SYSTEM_FILE_NAME,
+    VRAGEN_EN_MEEGAAN_POINT_SYSTEM_FILE_NAME,
+)
 from whist_score.models.Message import Message
 from whist_score.utils import read_json
 
@@ -48,7 +52,7 @@ class BaseRoundClass:
                     remove_first_letter_of_message=False,
                 )
             message.message(
-                "Please choose the players that succeeded. Separate with a space if needed (q to quit to previous question):"
+                "Choose the players that succeeded. Separate with a space if needed (q to quit to previous question):"
             )
             answer = message.input().split()
             try:

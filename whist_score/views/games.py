@@ -8,9 +8,7 @@ message = Message()
 
 def new_game(players: str):
     if not players:
-        message.message(
-            "Please provide the names of the 4 players, separated by a space."
-        )
+        message.message("Provide the names of the 4 players, separated by a space:")
         while True:
             players = message.input(lower=False).split()
             try:

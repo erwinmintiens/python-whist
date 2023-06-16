@@ -6,16 +6,30 @@ from typing import Union
 from colorama import Fore, Style
 from tabulate import tabulate
 
-from whist_score.constants import (ABONDANCE, CONFIG_FOLDER,
-                                   GAME_TYPES_FILE_NAME, GROTE_SOLO_SLIM,
-                                   KLEINE_SOLO_SLIM, SAVE_FOLDER, SOLO,
-                                   VRAGEN_EN_MEEGAAN)
+from whist_score.constants import (
+    ABONDANCE,
+    CONFIG_FOLDER,
+    GAME_TYPES_FILE_NAME,
+    GROTE_SOLO_SLIM,
+    KLEINE_SOLO_SLIM,
+    SAVE_FOLDER,
+    SOLO,
+    VRAGEN_EN_MEEGAAN,
+    TROEL,
+)
 from whist_score.models.Message import Message
 from whist_score.models.Player import Player
-from whist_score.models.RoundTypes import (Abondance, BaseMiserieClass,
-                                           GroteMiserie, GroteMiserieOpTafel,
-                                           KleineMiserie, Piccolo, Solo, Troel,
-                                           VragenEnMeegaan)
+from whist_score.models.RoundTypes import (
+    Abondance,
+    BaseMiserieClass,
+    GroteMiserie,
+    GroteMiserieOpTafel,
+    KleineMiserie,
+    Piccolo,
+    Solo,
+    Troel,
+    VragenEnMeegaan,
+)
 from whist_score.utils import read_json
 
 message = Message()
@@ -25,7 +39,12 @@ class Game:
     def __init__(
         self,
         current_round: int = 1,
-        players: list = [None, None, None, None],
+        players: list = [
+            Player("Player1"),
+            Player("Player2"),
+            Player("Player3"),
+            Player("Player4"),
+        ],
         scoresheet: list = [],
         current_game_id: Union[None, int] = None,
     ):
@@ -48,12 +67,12 @@ class Game:
 
     def add_record_to_scoresheet(self) -> None:
         self.scoresheet.append(
-            (
+            [
                 self.players[0].score,
                 self.players[1].score,
                 self.players[2].score,
                 self.players[3].score,
-            )
+            ]
         )
 
     def remove_record_from_scoresheet(self) -> None:
@@ -139,9 +158,15 @@ class Game:
                     continue
 
     def modify_scoresheet(self):
+        record = self.get_record_to_modify()
+        if not record:
+            return
+        self.modify_record(record=record)
+
+    def get_record_to_modify(self):
         while True:
             self.display_points()
-            message.message("Please select the record to modify (q to return to menu):")
+            message.message("Select the record to modify (q to return to menu):")
             removing = message.input()
             try:
                 if removing == "q":
@@ -155,11 +180,14 @@ class Game:
             except Exception as e:
                 message.error(f"An unexpected error occurred: {e}")
                 continue
+        return int(removing)
+
+    def modify_record(self, record: int):
         while True:
             message.message(
-                "Please provide new points for this record, all seperated by a space. If you do not want to change a specific value, put x instead of the new value:"
+                "Provide new points for this record, all seperated by a space. If you do not want to change a specific value, put x instead of the new value:"
             )
-            new_values = input("> ").strip()
+            new_values = message.input()
             try:
                 new_values = new_values.split()
                 if len(new_values) != 4:
@@ -172,7 +200,7 @@ class Game:
                     except Exception as e:
                         message.error(f"An unexpected error occurred: {e}")
                         continue
-                self.update_record(record_id=int(removing) - 1, new_values=new_values)
+                self.update_record(record_id=record - 1, new_values=new_values)
                 message.success("Successfully updated record.")
                 self.display_points()
                 break
@@ -207,7 +235,7 @@ class Game:
     def new_game(self):
         while True:
             message.message(
-                "Please insert the names of the 4 players, all separated by a space:"
+                "Insert the names of the 4 players, all separated by a space:"
             )
             players = message.input().split()
             try:
@@ -246,7 +274,7 @@ class Game:
                         message=f"\t{name}",
                         remove_first_letter_of_message=False,
                     )
-                message.message("Please select a game to load (q to return):")
+                message.message("Select a game to load (q to return):")
                 answer = message.input()
                 if answer == "q":
                     return
@@ -371,7 +399,7 @@ def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
         )
         message.footer()
         message.message(
-            f"Who is playing {Fore.BLUE}{current_game_type['name']}{Style.RESET_ALL}? If more players, please separate with a space:"
+            f"Who is playing {Fore.BLUE}{current_game_type['name']}{Style.RESET_ALL}? If more players, separate with a space:"
         )
         players = message.input()
         if players == "q":
@@ -446,7 +474,7 @@ def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
                             )
                 case "Troel":
                     if len(playing_players) != 2:
-                        message.error("Please select 2 players for a game of Troel.")
+                        message.error(f"Please select 2 players for a game of {TROEL}.")
                         continue
                     while True:
                         message.message("Did you keep the current trump? (Y/n): ")

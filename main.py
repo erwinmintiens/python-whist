@@ -20,7 +20,7 @@ def main(players=None):
     if players:
         players = players.strip().split(";")
         if len(players) != 4:
-            message.error("Please define 4 players, separated by a semicolon (;).")
+            message.error("Define 4 players, separated by a semicolon (;).")
             return
     version = distribution.version
     message.banner(version=version, url=url)
