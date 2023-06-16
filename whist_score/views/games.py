@@ -65,6 +65,5 @@ def settings():
                         message=f"\t{value}",
                         remove_first_letter_of_message=False,
                     )
-                point_system = message.input()
             case _:
                 message.error("Please provide a valid number.")

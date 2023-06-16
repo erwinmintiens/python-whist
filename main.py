@@ -4,7 +4,7 @@ import sys
 import click
 
 from whist_score.models.Message import Message
-from whist_score.views.games import load_game, new_game, settings
+from whist_score.views.games import load_game, new_game
 
 message = Message()
 

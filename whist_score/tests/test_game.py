@@ -2,7 +2,6 @@ import unittest
 from unittest import mock
 import sys
 from io import StringIO
-from colorama import Fore, Style
 
 
 from whist_score.models.Game import Game

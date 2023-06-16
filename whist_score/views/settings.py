@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from whist_score.utils import read_json, write_json
-
 
 def adjust_points():
     pass
