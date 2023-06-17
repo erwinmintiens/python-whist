@@ -21,7 +21,7 @@ class InstallCommand(install):
 
 setup(
     name="whist-score",
-    version="0.1.0",
+    version="0.1.1",
     author="Erwin Mintiens",
     author_email="erwin.mintiens@protonmail.com",
     license_files=("LICENSE",),
