@@ -3,6 +3,9 @@
 ## v0.1.1
 
 - Added quit option in main menu
+- Clearing terminal on each new screen for a smoother look
+- Added basic tests
+- Added test pipeline on push on GitHub
 
 ## v0.1.0
 
