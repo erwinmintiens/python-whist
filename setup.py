@@ -32,7 +32,7 @@ setup(
     py_modules=["whist_score", "main"],
     packages=find_packages(),
     package_data={"whist_score": ["config/*.json"]},
-    install_requires=["click>=7.1.2", "colorama>=0.4.6", "tabulate>=0.9.0"],
+    install_requires=["click>=7.1.2", "tabulate>=0.9.0"],
     python_requires=">=3.10",
     classifiers=[
         "Programming Language :: Python :: 3.10",

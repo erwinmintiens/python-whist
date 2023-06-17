@@ -3,7 +3,6 @@ import os
 import sys
 from typing import Union
 
-from colorama import Fore, Style
 from tabulate import tabulate
 
 from whist_score.constants import (
@@ -14,10 +13,10 @@ from whist_score.constants import (
     KLEINE_SOLO_SLIM,
     SAVE_FOLDER,
     SOLO,
-    VRAGEN_EN_MEEGAAN,
     TROEL,
+    VRAGEN_EN_MEEGAAN,
 )
-from whist_score.models.Message import Message
+from whist_score.models.Message import Message, bcolors
 from whist_score.models.Player import Player
 from whist_score.models.RoundTypes import (
     Abondance,
@@ -143,6 +142,9 @@ class Game:
                     continue
 
     def remove_record(self):
+        if len(self.scoresheet) == 0:
+            message.error("No available records to remove.")
+            return
         while True:
             self.display_points()
             message.message(
@@ -381,7 +383,7 @@ def choose_game_type() -> dict:
             valid = False
             while True:
                 message.message(
-                    f"Chosen game: {Fore.BLUE}{game_types[game_number]['name']}{Style.RESET_ALL}. Is this correct? (Y/n):"
+                    f"Chosen game: {bcolors.OKBLUE}{game_types[game_number]['name']}{bcolors.ENDC}. Is this correct? (Y/n):"
                 )
                 validity = message.input()
                 message.clear()
@@ -417,7 +419,7 @@ def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
         )
         message.footer()
         message.message(
-            f"Who is playing {Fore.BLUE}{current_game_type['name']}{Style.RESET_ALL}? If more players, separate with a space:"
+            f"Who is playing {bcolors.OKBLUE}{current_game_type['name']}{bcolors.ENDC}? If more players, separate with a space:"
         )
         players = message.input()
         message.clear()

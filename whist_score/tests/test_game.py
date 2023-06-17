@@ -1,8 +1,7 @@
-import unittest
-from unittest import mock
 import sys
+import unittest
 from io import StringIO
-
+from unittest import mock
 
 from whist_score.models.Game import Game
 from whist_score.models.Player import Player

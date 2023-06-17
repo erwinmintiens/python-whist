@@ -1,12 +1,11 @@
-from colorama import Fore, Style
+import os
 
 from whist_score.constants import (
-    TOTAL_HEADER_LENGTH,
+    BANNER_PADDING_LENGTH,
     CONFIG_FOLDER,
     GAME_TYPES_FILE_NAME,
-    BANNER_PADDING_LENGTH,
+    TOTAL_HEADER_LENGTH,
 )
-import os
 from whist_score.utils import read_json
 
 
@@ -18,17 +17,17 @@ class Message:
         print(message)
 
     def error(self, message: str = ""):
-        print(f"{Fore.RED}{message}{Style.RESET_ALL}")
+        print(f"{bcolors.FAIL}{message}{bcolors.ENDC}")
 
     def options(self, option: str, message: str, remove_first_letter_of_message=True):
         print(
-            f"({Fore.BLUE}{option}{Style.RESET_ALL}){message[1:]}"
+            f"({bcolors.OKBLUE}{option}{bcolors.ENDC}){message[1:]}"
         ) if remove_first_letter_of_message else print(
-            f"({Fore.BLUE}{option}{Style.RESET_ALL}){message}"
+            f"({bcolors.OKBLUE}{option}{bcolors.ENDC}){message}"
         )
 
     def success(self, message: str = ""):
-        print(f"{Fore.GREEN}{message}{Style.RESET_ALL}")
+        print(f"{bcolors.OKGREEN}{message}{bcolors.ENDC}")
 
     def banner(self, version: str, url: str):
         self.success("-" * BANNER_PADDING_LENGTH)
@@ -69,3 +68,15 @@ class Message:
                 remove_first_letter_of_message=False,
             )
         self.footer()
+
+
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
