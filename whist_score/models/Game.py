@@ -182,6 +182,7 @@ class Game:
             self.display_points()
             message.message("Select the record to modify (q to return to menu):")
             removing = message.input()
+            message.clear()
             try:
                 if removing == "q":
                     return
@@ -189,17 +190,16 @@ class Game:
                     raise ValueError()
                 break
             except ValueError:
-                message.clear()
                 message.error("Please select a valid number.")
                 continue
             except Exception as e:
-                message.clear()
                 message.error(f"An unexpected error occurred: {e}")
                 continue
         return int(removing)
 
     def modify_record(self, record: int):
         while True:
+            self.display_points()
             message.message(
                 "Provide new points for this record, all seperated by a space. If you do not want to change a specific value, put x instead of the new value:"
             )
@@ -222,7 +222,7 @@ class Game:
                 self.display_points()
                 break
             except ValueError:
-                message.error("Please insert 4 valid numbers.")
+                message.error("Please provide 4 valid numbers.")
                 continue
             except Exception as e:
                 message.error(f"An unexpected error occurred: {e}")
