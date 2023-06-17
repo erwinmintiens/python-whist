@@ -82,6 +82,8 @@ class Game:
         for index, item in enumerate(new_values):
             if isinstance(item, int):
                 self.scoresheet[record_id][index] = new_values[index]
+                if record_id == len(self.scoresheet) - 1:
+                    self.players[index].score = new_values[index]
 
     def menu(self):
         while True:
@@ -97,25 +99,33 @@ class Game:
             answer = message.input()
             match answer:
                 case "n":
+                    message.clear()
                     break
                 case "s":
+                    message.clear()
                     self.save()
                 case "q":
                     self.exit()
                 case "d":
+                    message.clear()
                     self.display_points()
                 case "r":
+                    message.clear()
                     self.remove_record()
                 case "m":
                     if len(self.scoresheet) == 0:
+                        message.clear()
                         message.error(
                             message="No score record(s) available to modify.",
                         )
                         continue
+                    message.clear()
                     self.modify_scoresheet()
                 case _:
+                    message.clear()
                     message.error(message="Command not recognized.")
                     continue
+        message.clear()
 
     def exit(self):
         while True:
@@ -123,11 +133,13 @@ class Game:
             quitting = message.input()
             match quitting:
                 case "n" | "":
+                    message.clear()
                     break
                 case "y":
                     sys.exit(0)
                 case _:
                     message.error("Command not recognized.")
+                    message.clear()
                     continue
 
     def remove_record(self):
@@ -137,6 +149,7 @@ class Game:
                 f"Record {len(self.scoresheet)} will be removed. Are you sure? (y/N)"
             )
             removing = message.input()
+            message.clear()
             match removing:
                 case "n" | "":
                     break
@@ -151,9 +164,10 @@ class Game:
                         message.error(
                             f"An error occurred while trying to remove last record from scoresheet: {e}"
                         )
-                    self.display_points()
+                    message.clear()
                     break
                 case _:
+                    message.clear()
                     message.error("Command not recognized.")
                     continue
 
@@ -175,9 +189,11 @@ class Game:
                     raise ValueError()
                 break
             except ValueError:
+                message.clear()
                 message.error("Please select a valid number.")
                 continue
             except Exception as e:
+                message.clear()
                 message.error(f"An unexpected error occurred: {e}")
                 continue
         return int(removing)
@@ -188,6 +204,7 @@ class Game:
                 "Provide new points for this record, all seperated by a space. If you do not want to change a specific value, put x instead of the new value:"
             )
             new_values = message.input()
+            message.clear()
             try:
                 new_values = new_values.split()
                 if len(new_values) != 4:
@@ -220,6 +237,7 @@ class Game:
         while True:
             message.message("Give a name for the file (leave empty to cancel):")
             answer = message.input(lower=False)
+            message.clear()
             if answer == "":
                 message.error("Saving game cancelled.")
                 break
@@ -238,6 +256,7 @@ class Game:
                 "Insert the names of the 4 players, all separated by a space:"
             )
             players = message.input().split()
+            message.clear()
             try:
                 if len(players) != 4:
                     raise ValueError()
@@ -258,6 +277,7 @@ class Game:
 
     def load_game(self):
         while True:
+            message.header("Files")
             try:
                 json_files = [
                     pos_json
@@ -274,8 +294,10 @@ class Game:
                         message=f"\t{name}",
                         remove_first_letter_of_message=False,
                     )
+                message.footer()
                 message.message("Select a game to load (q to return):")
                 answer = message.input()
+                message.clear()
                 if answer == "q":
                     return
                 try:
@@ -323,7 +345,8 @@ class Game:
                 current_game.assign_points()
             else:
                 while True:
-                    answer = input("How many tricks were achieved? ").strip()
+                    message.message("How many tricks were achieved?")
+                    answer = message.input()
                     try:
                         answer = int(answer)
                         if answer not in range(0, 14):
@@ -340,22 +363,17 @@ class Game:
 
 
 def choose_game_type() -> dict:
-    message.header("Game Types")
     game_types = read_json(f"{CONFIG_FOLDER}{GAME_TYPES_FILE_NAME}")
-    for index, item in enumerate(game_types):
-        message.options(
-            option=index,
-            message=f"\t{item['name']}",
-            remove_first_letter_of_message=False,
-        )
-    message.footer()
     while True:
+        message.new_round_options()
         message.message("Select new game:")
         game_number = message.input()
+        message.clear()
         try:
             game_number = int(game_number)
         except ValueError:
             message.error("Please provide a number.")
+            continue
         except Exception as e:
             message.error(f"An unexpected error occurred: {e}")
             continue
@@ -366,6 +384,7 @@ def choose_game_type() -> dict:
                     f"Chosen game: {Fore.BLUE}{game_types[game_number]['name']}{Style.RESET_ALL}. Is this correct? (Y/n):"
                 )
                 validity = message.input()
+                message.clear()
                 match validity:
                     case "y" | "":
                         valid = True
@@ -385,7 +404,6 @@ def choose_game_type() -> dict:
 
 def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
     while True:
-        print()
         message.header("Choose players")
         for index, value in enumerate(game.players):
             message.options(
@@ -402,6 +420,7 @@ def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
             f"Who is playing {Fore.BLUE}{current_game_type['name']}{Style.RESET_ALL}? If more players, separate with a space:"
         )
         players = message.input()
+        message.clear()
         if players == "q":
             return
         try:

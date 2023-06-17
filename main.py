@@ -17,6 +17,7 @@ url = distribution.metadata.get("home-page")
 @click.option("--players", help="Names of 4 players, seperated by a semicolon (;)")
 @click.version_option(version=version)
 def main(players=None):
+    message.clear()
     if players:
         players = players.strip().split(";")
         if len(players) != 4:
@@ -24,18 +25,23 @@ def main(players=None):
             return
     version = distribution.version
     message.banner(version=version, url=url)
+    print()
     while True:
+        message.header("Main Menu")
         message.options(option="N", message="New game")
         message.options(option="L", message="Load game")
         # message.options(option="S", message="Settings")
         print()
         message.options(option="Q", message="Quit")
+        message.footer()
         choice = message.input()
         match choice:
             case "n":
+                message.clear()
                 new_game(players=players)
                 break
             case "l":
+                message.clear()
                 load_game()
                 break
             # case "s":

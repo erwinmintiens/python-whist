@@ -22,6 +22,8 @@ TROEL_POINT_SYSTEM_FILE_NAME = "troel_point_system.json"
 VRAGEN_EN_MEEGAAN_POINT_SYSTEM_FILE_NAME = "vragen_en_meegaan_point_system.json"
 GAME_TYPES_FILE_NAME = "game_types.json"
 TOTAL_HEADER_LENGTH = 30
+BANNER_PADDING_LENGTH = 55
+GAME_SETTINGS = [{"name": "display_scoresheet_on_menu", "value": True}]
 POINT_SYSTEM_SETTINGS = [
     {
         "name": "Point System",
@@ -39,4 +41,4 @@ POINT_SYSTEM_SETTINGS = [
         ],
     }
 ]
-ROOT_SETTINGS = [POINT_SYSTEM_SETTINGS]
+ROOT_SETTINGS = [GAME_SETTINGS]

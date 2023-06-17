@@ -1,4 +1,4 @@
-from whist_score.constants import POINT_SYSTEM_SETTINGS, ROOT_SETTINGS
+from whist_score.constants import ROOT_SETTINGS
 from whist_score.models.Game import Game
 from whist_score.models.Message import Message
 from whist_score.models.Player import Player
@@ -11,6 +11,7 @@ def new_game(players: str):
         message.message("Provide the names of the 4 players, separated by a space:")
         while True:
             players = message.input(lower=False).split()
+            message.clear()
             try:
                 if len(players) != 4:
                     raise ValueError()
@@ -56,14 +57,6 @@ def settings():
         match answer:
             case "0":
                 print()
-                message.header("Point System")
-                for index, value in enumerate(
-                    POINT_SYSTEM_SETTINGS[int(answer)].get("options")
-                ):
-                    message.options(
-                        option=f"{index}",
-                        message=f"\t{value}",
-                        remove_first_letter_of_message=False,
-                    )
+                message.header("Game Settings")
             case _:
                 message.error("Please provide a valid number.")

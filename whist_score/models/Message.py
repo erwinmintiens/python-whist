@@ -1,6 +1,13 @@
 from colorama import Fore, Style
 
-from whist_score.constants import TOTAL_HEADER_LENGTH
+from whist_score.constants import (
+    TOTAL_HEADER_LENGTH,
+    CONFIG_FOLDER,
+    GAME_TYPES_FILE_NAME,
+    BANNER_PADDING_LENGTH,
+)
+import os
+from whist_score.utils import read_json
 
 
 class Message:
@@ -24,7 +31,6 @@ class Message:
         print(f"{Fore.GREEN}{message}{Style.RESET_ALL}")
 
     def banner(self, version: str, url: str):
-        BANNER_PADDING_LENGTH = 55
         self.success("-" * BANNER_PADDING_LENGTH)
         self.success("          _     _     _                               ")
         self.success("__      _| |__ (_)___| |_      ___  ___ ___  _ __ ___ ")
@@ -49,3 +55,17 @@ class Message:
     def input(self, message: str = "> ", lower=True) -> str:
         print()
         return input(message).strip().lower() if lower else input(message).strip()
+
+    def clear(self):
+        os.system("cls" if os.name == "nt" else "clear")
+
+    def new_round_options(self):
+        self.header("Game Types")
+        game_types = read_json(f"{CONFIG_FOLDER}{GAME_TYPES_FILE_NAME}")
+        for index, item in enumerate(game_types):
+            self.options(
+                option=index,
+                message=f"\t{item['name']}",
+                remove_first_letter_of_message=False,
+            )
+        self.footer()
