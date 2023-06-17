@@ -6,6 +6,8 @@
 - Clearing terminal on each new screen for a smoother look
 - Added basic tests
 - Added test pipeline on push on GitHub
+- Removed `colorama` dependency
+- Colors work in Windows Powershell
 
 ## v0.1.0
 
