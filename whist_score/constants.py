@@ -1,7 +1,6 @@
-import sys
 import os
+import sys
 from distutils.sysconfig import get_python_lib
-
 
 MISERIE = "Miserie"
 KLEINE_MISERIE = f"Kleine {MISERIE}"

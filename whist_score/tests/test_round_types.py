@@ -1,17 +1,18 @@
+import pytest
+
+from whist_score.constants import CONFIG_FOLDER, MISERIE_POINT_SYSTEM_FILE_NAME
+from whist_score.models.Player import Player
 from whist_score.models.RoundTypes import (
-    Solo,
-    KleineMiserie,
+    Abondance,
     GroteMiserie,
     GroteMiserieOpTafel,
-    VragenEnMeegaan,
-    Troel,
+    KleineMiserie,
     Piccolo,
-    Abondance,
+    Solo,
+    Troel,
+    VragenEnMeegaan,
 )
-import pytest
-from whist_score.models.Player import Player
 from whist_score.utils import read_json
-from whist_score.constants import CONFIG_FOLDER, MISERIE_POINT_SYSTEM_FILE_NAME
 
 
 def generate_players():
