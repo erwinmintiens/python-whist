@@ -1,4 +1,7 @@
+import sys
 import os
+from distutils.sysconfig import get_python_lib
+
 
 MISERIE = "Miserie"
 KLEINE_MISERIE = f"Kleine {MISERIE}"
@@ -14,7 +17,10 @@ PICCOLO = "Piccolo"
 ABONDANCE = "Abondance"
 ROOT_FOLDER = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FOLDER = os.path.join(ROOT_FOLDER, "config/")
-SAVE_FOLDER = os.path.expanduser("~/.whist_score/saves/")
+if sys.platform.startswith("win"):
+    SAVE_FOLDER = os.path.join(get_python_lib(), ".whist_score", "saves")
+else:
+    SAVE_FOLDER = os.path.join(os.path.expanduser("~"), ".whist_score", "saves")
 SOLO_POINT_SYSTEM_FILE_NAME = "solo_point_system.json"
 ABONDANCE_POINT_SYSTEM_FILE_NAME = "abondance_point_system.json"
 MISERIE_POINT_SYSTEM_FILE_NAME = "miserie_point_system.json"

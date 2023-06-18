@@ -244,9 +244,11 @@ class Game:
                 message.error("Saving game cancelled.")
                 break
             try:
-                with open(f"{SAVE_FOLDER}{answer}.json", "w") as f:
+                with open(os.path.join(SAVE_FOLDER, f"{answer}.json"), "w") as f:
                     json.dump(payload, f, indent=2)
-                message.success(f"Successfully saved to {SAVE_FOLDER}{answer}.json")
+                message.success(
+                    f"Successfully saved to {os.path.join(SAVE_FOLDER, answer + '.json')}"
+                )
                 break
             except Exception as e:
                 message.error(f"An unexpected error occurred: {e}")
@@ -309,7 +311,7 @@ class Game:
                 except ValueError:
                     message.error("Please provide a valid number.")
                     continue
-                with open(f"{SAVE_FOLDER}{json_files[answer]}", "r") as f:
+                with open(os.path.join(SAVE_FOLDER, f"{json_files[answer]}"), "r") as f:
                     payload = json.load(f)
                 break
             except Exception as e:

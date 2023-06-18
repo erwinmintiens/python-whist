@@ -19,14 +19,14 @@ class BaseRoundClass:
 
     def complete(self):
         for player in self.playing_players:
-            player.has_succeeded = False
+            player.succeeded_round = False
         while True:
             message.message("Did all the player(s) succeed? (Y/n):")
             succeeded = message.input()
             match succeeded:
                 case "y" | "":
                     for player in self.playing_players:
-                        player.has_succeeded = True
+                        player.succeeded_round = True
                     break
                 case "n":
                     pass
@@ -71,7 +71,7 @@ class BaseRoundClass:
                 continue
         if answer != ["q"]:
             for item in answer:
-                self.playing_players[int(item)].has_succeeded = True
+                self.playing_players[int(item)].succeeded_round = True
 
     def assign_points(self, tricks_achieved: int, point_system: dict) -> None:
         for player in self.playing_players:
@@ -212,7 +212,7 @@ class BaseMiserieClass(BaseRoundClass):
 
     def assign_points(self, point_system: str) -> None:
         number_of_failed_players = [
-            player.has_succeeded for player in self.playing_players
+            player.succeeded_round for player in self.playing_players
         ].count(False)
         base_point_system = read_json(
             f"{CONFIG_FOLDER}{MISERIE_POINT_SYSTEM_FILE_NAME}"
@@ -220,7 +220,7 @@ class BaseMiserieClass(BaseRoundClass):
         for player in self.playing_players:
             player.add_to_score(
                 base_point_system[point_system]["punten_geslaagd"]
-            ) if player.has_succeeded else player.add_to_score(
+            ) if player.succeeded_round else player.add_to_score(
                 base_point_system[point_system]["punten_niet_geslaagd"]
             )
         if number_of_failed_players == 1:
