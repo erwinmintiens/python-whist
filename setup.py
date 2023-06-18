@@ -1,4 +1,6 @@
 import os
+import sys
+from distutils.sysconfig import get_python_lib
 
 from setuptools import find_packages, setup
 from setuptools.command.install import install
@@ -14,18 +16,24 @@ class InstallCommand(install):
     def run(self):
         install.run(self)
 
-        save_files_dir = os.path.join(os.path.expanduser("~"), ".whist_score/saves")
+        if sys.platform.startswith("win"):
+            save_files_dir = os.path.join(get_python_lib(), ".whist_score", "saves")
+        else:
+            save_files_dir = os.path.join(
+                os.path.expanduser("~"), ".whist_score", "saves"
+            )
+
         os.makedirs(save_files_dir, exist_ok=True)
         print(f"Created directory: {save_files_dir}")
 
 
 setup(
     name="whist-score",
-    version="0.1.1",
+    version="0.3.6",
     author="Erwin Mintiens",
     author_email="erwin.mintiens@protonmail.com",
     license_files=("LICENSE",),
-    description="whist-score is a scorekeeper for the whist card game.",
+    description="whist-score is a scorekeeper for the colour whist card game.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/erwinmintiens/whist-score",
