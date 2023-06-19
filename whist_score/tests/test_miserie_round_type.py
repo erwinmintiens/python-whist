@@ -1,27 +1,17 @@
 import pytest
 
-from whist_score.constants import CONFIG_FOLDER, MISERIE_POINT_SYSTEM_FILE_NAME
-from whist_score.models.Player import Player
+from whist_score.constants import MISERIE_POINT_SYSTEM_FILE_NAME
 from whist_score.models.RoundTypes import (
     GroteMiserie,
     GroteMiserieOpTafel,
     KleineMiserie,
     Piccolo,
 )
-from whist_score.utils import read_json
-
-
-def generate_players():
-    return Player("Player1"), Player("Player2"), Player("Player3"), Player("Player4")
-
-
-def check_scores(players: list, scores: list):
-    for index, player in enumerate(players):
-        assert player.score == scores[index]
-
-
-def get_point_system_config():
-    return read_json(f"{CONFIG_FOLDER}{MISERIE_POINT_SYSTEM_FILE_NAME}")
+from whist_score.tests.utils import (
+    check_scores,
+    generate_players,
+    get_point_system_config,
+)
 
 
 def test_kleine_miserie_assign_points_1_player_failed():
@@ -47,7 +37,7 @@ def test_kleine_miserie_assign_points_1_player_failed():
 def test_miserie_types_assign_points_1_player_succeeded(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player4.succeeded_round = True
-    points_system = get_point_system_config()
+    points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
     expected_points = [0, 0, 0, points_system[game_type]["punten_geslaagd"]]
     round_type = game_class(
         playing_players=[player4], other_players=[player1, player2, player3]
@@ -68,7 +58,7 @@ def test_miserie_types_assign_points_1_player_succeeded(game_type, game_class):
 def test_miserie_types_assign_points_1_player_failed(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player3.succeeded_round = False
-    points_system = get_point_system_config()
+    points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
     expected_points = [
         points_system[game_type]["punten_anderen_niet_geslaagd"]["1"],
         points_system[game_type]["punten_anderen_niet_geslaagd"]["1"],
@@ -95,7 +85,7 @@ def test_miserie_types_assign_points_1_player_succeeded_1_failed(game_type, game
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = True
     player2.succeeded_round = False
-    points_system = get_point_system_config()
+    points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
     expected_points = [
         points_system[game_type]["punten_geslaagd"],
         points_system[game_type]["punten_niet_geslaagd"],
@@ -122,7 +112,7 @@ def test_miserie_types_assign_points_2_players_succeeded(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = True
     player2.succeeded_round = True
-    points_system = get_point_system_config()
+    points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
     expected_points = [
         points_system[game_type]["punten_geslaagd"],
         points_system[game_type]["punten_geslaagd"],
@@ -149,7 +139,7 @@ def test_miserie_types_assign_points_2_players_failed(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = False
     player2.succeeded_round = False
-    points_system = get_point_system_config()
+    points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
     expected_points = [
         points_system[game_type]["punten_niet_geslaagd"],
         points_system[game_type]["punten_niet_geslaagd"],
@@ -179,7 +169,7 @@ def test_miserie_types_assign_points_2_players_failed_1_succeeded(
     player1.succeeded_round = False
     player2.succeeded_round = False
     player4.succeeded_round = True
-    points_system = get_point_system_config()
+    points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
     expected_points = [
         points_system[game_type]["punten_niet_geslaagd"],
         points_system[game_type]["punten_niet_geslaagd"],
@@ -207,7 +197,7 @@ def test_miserie_types_assign_points_3_players_failed(game_type, game_class):
     player1.succeeded_round = False
     player2.succeeded_round = False
     player4.succeeded_round = False
-    points_system = get_point_system_config()
+    points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
     expected_points = [
         points_system[game_type]["punten_niet_geslaagd"],
         points_system[game_type]["punten_niet_geslaagd"],
@@ -238,7 +228,7 @@ def test_miserie_types_assign_points_3_players_failed_1_succeeded(
     player2.succeeded_round = False
     player3.succeeded_round = True
     player4.succeeded_round = False
-    points_system = get_point_system_config()
+    points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
     expected_points = [
         points_system[game_type]["punten_niet_geslaagd"],
         points_system[game_type]["punten_niet_geslaagd"],

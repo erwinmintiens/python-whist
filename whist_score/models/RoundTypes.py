@@ -93,6 +93,8 @@ class Abondance(BaseRoundClass):
         playing_players: list = [],
         other_players: list = [],
     ) -> None:
+        if number_of_tricks < 9 or number_of_tricks > 13:
+            raise ValueError("A game of Abondance should have between 9 and 13 tricks.")
         self.number_of_tricks = number_of_tricks
         if len(playing_players) != 1:
             raise ValueError(
