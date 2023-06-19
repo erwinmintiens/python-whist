@@ -166,10 +166,8 @@ class Game:
                         message.error(
                             f"An error occurred while trying to remove last record from scoresheet: {e}"
                         )
-                    message.clear()
                     break
                 case _:
-                    message.clear()
                     message.error("Command not recognized.")
                     continue
 
@@ -351,6 +349,7 @@ class Game:
                 while True:
                     message.message("How many tricks were achieved?")
                     answer = message.input()
+                    message.clear()
                     try:
                         answer = int(answer)
                         if answer not in range(0, 14):
@@ -429,6 +428,9 @@ def choose_players(game: Game, current_game_type: dict) -> Union[None, object]:
             return
         try:
             playing_players = players.split()
+            if any([int(x) not in range(1, 5) for x in playing_players]):
+                message.error("Please provide valid number(s).")
+                continue
             for index, player in enumerate(playing_players):
                 playing_players[index] = game.players[int(player) - 1]
             other_players = [x for x in game.players if x not in playing_players]

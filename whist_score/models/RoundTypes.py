@@ -150,6 +150,10 @@ class Troel(VragenEnMeegaan):
         other_players: list = [],
         trump_changed=False,
     ) -> None:
+        if number_of_tricks not in (8, 9):
+            raise ValueError(
+                "The number of tricks for a game of Troel should be either 8 or 9."
+            )
         super().__init__(
             number_of_tricks=number_of_tricks,
             playing_players=playing_players,
