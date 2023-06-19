@@ -187,6 +187,10 @@ class Solo(BaseRoundClass):
         playing_players: list = [],
         other_players: list = [],
     ) -> None:
+        if number_of_tricks < 6 or number_of_tricks > 8:
+            raise ValueError(
+                "A game of Solo must have a number of tricks between 6 and 8."
+            )
         self.number_of_tricks = number_of_tricks
         if len(playing_players) != 1:
             raise ValueError(
