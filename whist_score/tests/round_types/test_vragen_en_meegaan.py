@@ -74,7 +74,7 @@ def test_assign_points(number_of_tricks, number_of_tricks_achieved):
 
 
 @pytest.mark.parametrize("number_of_tricks", [6, 7, 14])
-def test_abondance_wrong_number_of_tricks(number_of_tricks):
+def test_wrong_number_of_tricks(number_of_tricks):
     player1, player2, player3, player4 = generate_players()
     with pytest.raises(ValueError):
         VragenEnMeegaan(

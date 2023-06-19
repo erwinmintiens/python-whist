@@ -29,7 +29,7 @@ from whist_score.tests.utils import (
         (8, 5),
     ],
 )
-def test_solo_assign_points(number_of_tricks, number_of_tricks_achieved):
+def test_assign_points(number_of_tricks, number_of_tricks_achieved):
     player1, player2, player3, player4 = generate_players()
     point_system = get_point_system_config(SOLO_POINT_SYSTEM_FILE_NAME)
     expected_points = [
@@ -56,7 +56,7 @@ def test_solo_assign_points(number_of_tricks, number_of_tricks_achieved):
 
 
 @pytest.mark.parametrize("number_of_tricks", [4, 5, 9, 10])
-def test_abondance_wrong_number_of_tricks(number_of_tricks):
+def test_wrong_number_of_tricks(number_of_tricks):
     player1, player2, player3, player4 = generate_players()
     with pytest.raises(ValueError):
         Solo(

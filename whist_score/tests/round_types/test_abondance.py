@@ -39,7 +39,7 @@ from whist_score.tests.utils import (
         (13, 11),
     ],
 )
-def test_abondance_assign_points(number_of_tricks, number_of_tricks_achieved):
+def test_assign_points(number_of_tricks, number_of_tricks_achieved):
     player1, player2, player3, player4 = generate_players()
     point_system = get_point_system_config(ABONDANCE_POINT_SYSTEM_FILE_NAME)
     expected_points = [
@@ -66,7 +66,7 @@ def test_abondance_assign_points(number_of_tricks, number_of_tricks_achieved):
 
 
 @pytest.mark.parametrize("number_of_tricks", [7, 8, 14])
-def test_abondance_wrong_number_of_tricks(number_of_tricks):
+def test_wrong_number_of_tricks(number_of_tricks):
     player1, player2, player3, player4 = generate_players()
     with pytest.raises(ValueError):
         Abondance(

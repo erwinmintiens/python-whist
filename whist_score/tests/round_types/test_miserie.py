@@ -14,17 +14,6 @@ from whist_score.tests.utils import (
 )
 
 
-def test_kleine_miserie_assign_points_1_player_failed():
-    player1, player2, player3, player4 = generate_players()
-    player1.succeeded_round = False
-    round_type = KleineMiserie(
-        playing_players=[player1],
-        other_players=[player2, player3, player4],
-    )
-    round_type.assign_points()
-    check_scores([player1, player2, player3, player4], [-18, 12, 12, 12])
-
-
 @pytest.mark.parametrize(
     "game_type,game_class",
     [
@@ -34,7 +23,7 @@ def test_kleine_miserie_assign_points_1_player_failed():
         ("piccolo", Piccolo),
     ],
 )
-def test_miserie_types_assign_points_1_player_succeeded(game_type, game_class):
+def test_assign_points_1_player_succeeded(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player4.succeeded_round = True
     points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
@@ -55,7 +44,7 @@ def test_miserie_types_assign_points_1_player_succeeded(game_type, game_class):
         ("piccolo", Piccolo),
     ],
 )
-def test_miserie_types_assign_points_1_player_failed(game_type, game_class):
+def test_assign_points_1_player_failed(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player3.succeeded_round = False
     points_system = get_point_system_config(MISERIE_POINT_SYSTEM_FILE_NAME)
@@ -81,7 +70,7 @@ def test_miserie_types_assign_points_1_player_failed(game_type, game_class):
         ("piccolo", Piccolo),
     ],
 )
-def test_miserie_types_assign_points_1_player_succeeded_1_failed(game_type, game_class):
+def test_assign_points_1_player_succeeded_1_failed(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = True
     player2.succeeded_round = False
@@ -108,7 +97,7 @@ def test_miserie_types_assign_points_1_player_succeeded_1_failed(game_type, game
         ("piccolo", Piccolo),
     ],
 )
-def test_miserie_types_assign_points_2_players_succeeded(game_type, game_class):
+def test_assign_points_2_players_succeeded(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = True
     player2.succeeded_round = True
@@ -135,7 +124,7 @@ def test_miserie_types_assign_points_2_players_succeeded(game_type, game_class):
         ("piccolo", Piccolo),
     ],
 )
-def test_miserie_types_assign_points_2_players_failed(game_type, game_class):
+def test_assign_points_2_players_failed(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = False
     player2.succeeded_round = False
@@ -162,9 +151,7 @@ def test_miserie_types_assign_points_2_players_failed(game_type, game_class):
         ("piccolo", Piccolo),
     ],
 )
-def test_miserie_types_assign_points_2_players_failed_1_succeeded(
-    game_type, game_class
-):
+def test_assign_points_2_players_failed_1_succeeded(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = False
     player2.succeeded_round = False
@@ -192,7 +179,7 @@ def test_miserie_types_assign_points_2_players_failed_1_succeeded(
         ("piccolo", Piccolo),
     ],
 )
-def test_miserie_types_assign_points_3_players_failed(game_type, game_class):
+def test_assign_points_3_players_failed(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = False
     player2.succeeded_round = False
@@ -220,9 +207,7 @@ def test_miserie_types_assign_points_3_players_failed(game_type, game_class):
         ("piccolo", Piccolo),
     ],
 )
-def test_miserie_types_assign_points_3_players_failed_1_succeeded(
-    game_type, game_class
-):
+def test_assign_points_3_players_failed_1_succeeded(game_type, game_class):
     player1, player2, player3, player4 = generate_players()
     player1.succeeded_round = False
     player2.succeeded_round = False
